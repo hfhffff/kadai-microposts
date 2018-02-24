@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :require_user_logged_in, only: [:index, :show, :followings, :followers]
+  before_action :require_user_logged_in, only: [:index, :show, :followings, :followers, :favos]
   def index
     @users = User.all.page(params[:page])
   end
@@ -7,6 +7,7 @@ class UsersController < ApplicationController
   def show
     @user = User.find(params[:id])
     @microposts = @user.microposts.order('created_at DESC').page(params[:page])
+    @favoitem = Micropost.find(params[:id])
     counts(@user)
   end
 
@@ -36,6 +37,11 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     @followers = @user.followers.page(params[:page])
     counts(@user)
+  end
+  
+  def favos#一応成立後の変更点1(Micropost to User)
+    @user = User.find(params[:id])
+    @favos = @user.favos.page(params[:page])
   end
   
   private
